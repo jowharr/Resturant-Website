@@ -15,19 +15,16 @@ export const counterSlice = createSlice({
         },
 
         increment: (state, action) => {
-            
-            state.cartList.push({
-                ...action.payload,
-                count: 0
-            })
-            
-            const productArr = action.payload;
-            state.cartList.forEach((item) => {
-                if (item?.dish_id === productArr.dish_id) {
-                    item.count++;
-                }
-            })
-        },
+            const payload = action.payload
+            const itemIndex = state.cartList.findIndex(item => item.dish_id === payload.dish_id);
+            if (itemIndex === -1) {
+              const newItem = { ...payload, count: 1 };
+              state.cartList = state.cartList.concat(newItem);
+            } else {
+              state.cartList[itemIndex].count++;
+            }
+          },
+
         decrement: (state, action) => {
             const productArr = action.payload;
             state.cartList.forEach((item) => {
